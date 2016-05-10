@@ -1,4 +1,5 @@
 require 'hydradam/file_set_behavior/has_ffprobe'
+require 'nokogiri'
 
 module IU
   module Models
@@ -7,6 +8,13 @@ module IU
         extend ActiveSupport::Concern
         included do
           contains :mdpi_xml, class_name: "XMLFile"
+          f = Nokogiri::XML(File.open("MDPI_40000000788093.xml"))
+          doc = Nokogiri::XML(f)
+          doc.at_xpath("/*/@Date")
+
+          @digitization_timestamp = Date.to_time.to_i
+
+          puts @digitization_timestamp
         end
 
         def access_copy
